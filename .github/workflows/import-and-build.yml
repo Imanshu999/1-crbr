@@ -23,17 +23,17 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Import the complete upstream source
+      - name: Import the upstream source (keep this repository's workflow)
         shell: bash
         run: |
           set -euo pipefail
           git clone --depth 1 https://github.com/justshivv/Opentune.git /tmp/opentune
-          rsync -a --exclude='.git' /tmp/opentune/ ./
+          rsync -a --exclude='.git' --exclude='.github/workflows/***' /tmp/opentune/ ./
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           if ! git diff --cached --quiet; then
-            git commit -m "Import OpenTune source and workflows with GPL-3.0 notices"
+            git commit -m "Import OpenTune source with GPL-3.0 notices"
             git push origin HEAD:${GITHUB_REF_NAME}
           fi
 
